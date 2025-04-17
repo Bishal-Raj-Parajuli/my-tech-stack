@@ -4,7 +4,7 @@ import { z } from "zod";
 const c = initContract();
 
 const PostSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   title: z.string(),
   body: z.string(),
 });
@@ -25,9 +25,23 @@ export const contract = c.router({
   getPost: {
     method: "GET",
     path: `/posts/:id`,
+    pathParams: z.object({
+      id: z.coerce.number(),
+    }),
     responses: {
-      200: PostSchema.nullable(),
+      200: PostSchema,
+      404: z.object({
+        message: z.string(),
+      }),
     },
     summary: "Get a post by id",
+  },
+  getPosts: {
+    method: "GET",
+    path: `/posts`,
+    responses: {
+      200: z.array(PostSchema),
+    },
+    summary: "Get all posts",
   },
 });

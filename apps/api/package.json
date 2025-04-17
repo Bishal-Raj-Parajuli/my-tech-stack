@@ -20,9 +20,12 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@mytechstack/ts-rest": "*",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/platform-fastify": "^11.0.20",
+    "@ts-rest/nest": "^3.52.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
