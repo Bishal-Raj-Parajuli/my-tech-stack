@@ -2,7 +2,6 @@ import { Controller, HttpException, HttpStatus } from '@nestjs/common';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
 import { APIRoute } from '@mytechstack/ts-rest';
 import { PostService } from 'src/services/post.services';
-import { INTERNAL_SERVER_ERROR } from 'src/utils/response';
 
 @Controller()
 export class PostController {
