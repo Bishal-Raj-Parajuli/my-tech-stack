@@ -10,8 +10,8 @@ import { z } from "zod";
 
 const PostSchema = z.object({
   id: z.number(),
-  title: z.string().trim().min(1),
-  body: z.string().trim().min(1),
+  title: z.string().trim().min(1, "Title is required"),
+  body: z.string().trim().min(1, "Body is required"),
 });
 
 export const postContract = initContract().router({
