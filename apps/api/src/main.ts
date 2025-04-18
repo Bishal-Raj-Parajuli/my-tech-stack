@@ -5,7 +5,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { generateOpenApi } from '@ts-rest/open-api';
-import { contract } from '@mytechstack/ts-rest';
+import { APIRoute } from '@mytechstack/ts-rest';
 import { SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -14,7 +14,7 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
-  const document = generateOpenApi(contract, {
+  const document = generateOpenApi(APIRoute, {
     info: {
       title: 'Posts API',
       version: '1.0.0',

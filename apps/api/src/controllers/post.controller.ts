@@ -1,36 +1,65 @@
-import { Controller } from '@nestjs/common';
+import { Controller, HttpException, HttpStatus } from '@nestjs/common';
 import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
-import { contract } from '@mytechstack/ts-rest';
+import { APIRoute } from '@mytechstack/ts-rest';
 import { PostService } from 'src/services/post.services';
+import { INTERNAL_SERVER_ERROR } from 'src/utils/response';
 
 @Controller()
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @TsRestHandler(contract.getPosts)
+  @TsRestHandler(APIRoute.posts.getPosts)
   getAllPosts() {
-    return tsRestHandler(contract.getPosts, async () => {
-      const posts = await this.postService.getAllPosts();
-      return { status: 200, body: posts };
-    });
-  }
-
-  @TsRestHandler(contract.getPost)
-  getPostById() {
-    return tsRestHandler(contract.getPost, async ({ params }) => {
-      const post = await this.postService.getPostById(params.id);
-      if (!post) {
-        return { status: 404, body: { message: 'Post not found' } };
+    return tsRestHandler(APIRoute.posts.getPosts, async () => {
+      try {
+        const posts = await this.postService.getAllPosts();
+        return {
+          status: HttpStatus.OK,
+          body: {
+            status: 'OK',
+            data: posts,
+          },
+        };
+      } catch (error) {
+        throw new HttpException('Internal Server Error', 500);
       }
-      return { status: 200, body: post };
     });
   }
 
-  @TsRestHandler(contract.createPost)
+  @TsRestHandler(APIRoute.posts.getPost)
+  getPostById() {
+    return tsRestHandler(APIRoute.posts.getPost, async ({ params }) => {
+      try {
+        const post = await this.postService.getPostById(params.id);
+        if (!post) {
+          return {
+            status: HttpStatus.NOT_FOUND,
+            body: { status: 'NOT_FOUND', message: 'Post not found' },
+          };
+        }
+        return { status: 200, body: { status: 'OK', data: post } };
+      } catch (error) {
+        throw new HttpException('Internal Server Error', 500);
+      }
+    });
+  }
+
+  @TsRestHandler(APIRoute.posts.createPost)
   createPost() {
-    return tsRestHandler(contract.createPost, async ({ body }) => {
-      const post = await this.postService.createPost(body);
-      return { status: 201, body: post };
+    return tsRestHandler(APIRoute.posts.createPost, async ({ body }) => {
+      try {
+        const post = await this.postService.createPost(body);
+        //NOTE: CHEK IF POST WAS CREATED
+        return {
+          status: HttpStatus.CREATED,
+          body: {
+            status: 'CREATED',
+            data: post,
+          },
+        };
+      } catch (error) {
+        throw new HttpException('Internal Server Error', 500);
+      }
     });
   }
 }
